@@ -1,24 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
 <atlassian-plugin key="${atlassian.plugin.key}" name="${project.name}" plugins-version="2">
-    <plugin-info>
-        <description>${project.description}</description>
-        <version>${project.version}</version>
-        <vendor name="${project.organization.name}" url="${project.organization.url}" />
-        <param name="plugin-icon">images/pluginIcon.png</param>
-        <param name="plugin-logo">images/pluginLogo.png</param>
-    </plugin-info>
-
-    <!-- add our i18n resource -->
-    <resource type="i18n" name="i18n" location="parentheses-jira-custom-field"/>
-    
-    <!-- add our web resources -->
-    <web-resource key="parentheses-jira-custom-field-resources" name="parentheses-jira-custom-field Web Resources">
-        <dependency>com.atlassian.auiplugin:ajs</dependency>
-        
-        <resource type="download" name="parentheses-jira-custom-field.css" location="/css/parentheses-jira-custom-field.css"/>
-        <resource type="download" name="parentheses-jira-custom-field.js" location="/js/parentheses-jira-custom-field.js"/>
-        <resource type="download" name="images/" location="/images"/>
-
-        <context>parentheses-jira-custom-field</context>
-    </web-resource>
-    
+  <plugin-info>
+    <description>${project.description}</description>
+    <version>${project.version}</version>
+    <vendor name="${project.organization.name}" url="${project.organization.url}"/>
+    <param name="plugin-icon">images/pluginIcon.png</param>
+    <param name="plugin-logo">images/pluginLogo.png</param>
+  </plugin-info>
+  <!-- add our i18n resource -->
+  <resource type="i18n" name="i18n" location="parentheses-jira-custom-field"/>
+  <!-- add our web resources -->
+  <web-resource key="parentheses-jira-custom-field-resources" name="parentheses-jira-custom-field Web Resources">
+    <dependency>com.atlassian.auiplugin:ajs</dependency>
+    <resource type="download" name="parentheses-jira-custom-field.css" location="/css/parentheses-jira-custom-field.css"/>
+    <resource type="download" name="parentheses-jira-custom-field.js" location="/js/parentheses-jira-custom-field.js"/>
+    <resource type="download" name="images/" location="/images"/>
+    <context>parentheses-jira-custom-field</context>
+  </web-resource>
+  <customfield-type name="Parentheses Custom Field" i18n-name-key="parentheses-custom-field.name" key="parentheses-custom-field" class="com.idalko.plugins.jira.customfields.ParenthesesCustomField">
+    <description key="parentheses-custom-field.description">The Parentheses Custom Field Plugin</description>
+    <resource name="view" type="velocity" location="/templates/customfields/parentheses-custom-field/view.vm"/>
+    <resource name="edit" type="velocity" location="/templates/customfields/parentheses-custom-field/edit.vm"/>
+  </customfield-type>
 </atlassian-plugin>
