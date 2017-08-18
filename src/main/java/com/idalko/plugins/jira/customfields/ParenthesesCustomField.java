@@ -68,7 +68,7 @@ public class ParenthesesCustomField extends AbstractSingleFieldType<String> {
     	}
     }
     
-    private boolean validateParentheses (String toValidate) {
+    public boolean validateParentheses (String toValidate) {
     	Deque<Character> parentheses = new LinkedList<>();
     	
     	for (int i = 0; i < toValidate.length(); i++) {
