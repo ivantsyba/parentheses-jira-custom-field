@@ -15,6 +15,8 @@ public class ParenthesesCustomFieldTest {
 	ParenthesesCustomField customField;
 	String[] invalidInputStrings = {"(", ")", "(()", "())", "()(", "())(()"};
 	String[] validInputStrings = {"()", "()()", "(()())", "(((()))())"};
+	String sameStringMessage = "Method didn't return same string!";
+	String notNullMessage = "Method didn't return null with passed null argument!";
 	
     @Before
     public void setup() {    	
@@ -24,14 +26,14 @@ public class ParenthesesCustomFieldTest {
     @Test
     public void testValidParentheses() {    	
     	for (String toValidate : validInputStrings) {
-    		assertTrue(customField.validateParentheses(toValidate));
+    		assertTrue("Balanced parentheses not passed validation!", customField.validateParentheses(toValidate));
     	}
     }
     
     @Test
     public void testInValidParentheses() {    	
     	for (String toValidate : invalidInputStrings) {
-    		assertFalse(customField.validateParentheses(toValidate));
+    		assertFalse("Unbalanced parentheses passed validation!", customField.validateParentheses(toValidate));
     	}
     }
 
@@ -45,17 +47,29 @@ public class ParenthesesCustomFieldTest {
     }
     
     @Test
-    public void testValidation() throws Exception {
+    public void testGetSingularObjectFromString() throws Exception {
     	for (String toValidate : validInputStrings) {
-    		assertEquals(toValidate, customField.getSingularObjectFromString(toValidate));
+    		assertEquals(sameStringMessage, toValidate, customField.getSingularObjectFromString(toValidate));
     	}
 
     }
     
     @Test
-    public void testNullReturn() throws Exception {    	
-    	assertNull(customField.getSingularObjectFromString(null));
-    	assertNull(customField.getStringFromSingularObject(null));
+    public void testGetStringFromSingularObject() throws Exception {
+    	for (String toValidate : validInputStrings) {
+    		assertEquals(sameStringMessage, toValidate, customField.getStringFromSingularObject(toValidate));
+    	}
+
+    }
+    
+    @Test
+    public void testGetSingularObjectFromStringNullReturn() throws Exception {    	
+    	assertNull(notNullMessage, customField.getSingularObjectFromString(null));
+    }
+    
+    @Test
+    public void testGetStringFromSingularObjectNullReturn() throws Exception {
+    	assertNull(notNullMessage, customField.getStringFromSingularObject(null));
     }
 
 }
