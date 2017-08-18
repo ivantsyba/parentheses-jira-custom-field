@@ -1,40 +1,62 @@
 package com.idalko.plugins.jira.customfields;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import com.atlassian.jira.issue.customfields.impl.TextCFType;
+import com.atlassian.jira.issue.customfields.impl.AbstractSingleFieldType;
 import com.atlassian.jira.issue.customfields.manager.GenericConfigManager;
 import com.atlassian.jira.issue.customfields.persistence.CustomFieldValuePersister;
+import com.atlassian.jira.issue.customfields.persistence.PersistenceFieldType;
 import com.atlassian.jira.issue.customfields.impl.FieldValidationException;
-import com.atlassian.jira.issue.Issue;
-import com.atlassian.jira.issue.fields.CustomField;
-import com.atlassian.jira.issue.fields.config.FieldConfig;
-import com.atlassian.jira.issue.fields.layout.field.FieldLayoutItem;
-import java.util.List;
-import java.util.Map;
+import com.atlassian.plugin.spring.scanner.annotation.component.Scanned;
+import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 
-public class ParenthesesCustomField extends TextCFType {
-    private static final Logger log = LoggerFactory.getLogger(ParenthesesCustomField.class);
+@Scanned
+public class ParenthesesCustomField extends AbstractSingleFieldType<String> {
+	
+	@ComponentImport
+	CustomFieldValuePersister customFieldValuePersister;	
+	@ComponentImport
+	GenericConfigManager genericConfigManager;
 
-    public ParenthesesCustomField(CustomFieldValuePersister customFieldValuePersister, GenericConfigManager genericConfigManager) {
-    super(customFieldValuePersister, genericConfigManager);
-}
+	public ParenthesesCustomField(
+			CustomFieldValuePersister customFieldValuePersister,
+			GenericConfigManager genericConfigManager) {
+		super(customFieldValuePersister, genericConfigManager);
+		this.customFieldValuePersister = customFieldValuePersister;
+		this.genericConfigManager = genericConfigManager;
+	}
+
+	@Override
+	public String getSingularObjectFromString(String string)
+			throws FieldValidationException {
+		if (string == null) return null;
+		
+		return string;
+	}
+
+	@Override
+	public String getStringFromSingularObject(String stringSingularObject) {
+		if (stringSingularObject == null) {
+			return null; 
+		} else {
+			return stringSingularObject.toString();
+		}
+	}
+
+	@Override
+	protected PersistenceFieldType getDatabaseType() {
+		return PersistenceFieldType.TYPE_UNLIMITED_TEXT;
+	}
+
+	@Override
+	protected Object getDbValueFromObject(String string) {
+		return getStringFromSingularObject(string);
+	}
+
+	@Override
+	protected String getObjectFromDbValue(Object dbValue)
+			throws FieldValidationException {
+		return getSingularObjectFromString((String) dbValue);
+	}
     
-    @Override
-    public Map<String, Object> getVelocityParameters(final Issue issue,
-                                                     final CustomField field,
-                                                     final FieldLayoutItem fieldLayoutItem) {
-        final Map<String, Object> map = super.getVelocityParameters(issue, field, fieldLayoutItem);
-
-        // This method is also called to get the default value, in
-        // which case issue is null so we can't use it to add currencyLocale
-        if (issue == null) {
-            return map;
-        }
-
-         FieldConfig fieldConfig = field.getRelevantConfig(issue);
-         //add what you need to the map here
-
-        return map;
-    }
+    
+    
 }
