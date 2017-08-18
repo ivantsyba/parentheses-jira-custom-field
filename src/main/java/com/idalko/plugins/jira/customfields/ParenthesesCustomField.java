@@ -1,5 +1,8 @@
 package com.idalko.plugins.jira.customfields;
 
+import java.util.Deque;
+import java.util.LinkedList;
+
 import com.atlassian.jira.issue.customfields.impl.AbstractSingleFieldType;
 import com.atlassian.jira.issue.customfields.manager.GenericConfigManager;
 import com.atlassian.jira.issue.customfields.persistence.CustomFieldValuePersister;
@@ -28,7 +31,7 @@ public class ParenthesesCustomField extends AbstractSingleFieldType<String> {
 	public String getSingularObjectFromString(String string)
 			throws FieldValidationException {
 		if (string == null) return null;
-		
+		if (!validateParentheses(string)) throw new FieldValidationException("Parentheses not balanced!");
 		return string;
 	}
 
@@ -57,6 +60,30 @@ public class ParenthesesCustomField extends AbstractSingleFieldType<String> {
 		return getSingularObjectFromString((String) dbValue);
 	}
     
+    public static void main (String[] args) {
+    	ParenthesesCustomField customField = new ParenthesesCustomField(null, null);
+    	String[] inputStrings = {"()", ")()()()(", "()))((()", "(((()))))"};
+    	for (String toValidate : inputStrings) {
+    		System.out.println(customField.validateParentheses(toValidate));
+    	}
+    }
     
+    private boolean validateParentheses (String toValidate) {
+    	Deque<Character> parentheses = new LinkedList<>();
+    	
+    	for (int i = 0; i < toValidate.length(); i++) {
+    		Character character = toValidate.charAt(i);
+    		if (character == '(') {
+    			parentheses.addLast(character);
+    		} else if (character == ')') {
+    			if (!parentheses.isEmpty()) {
+    				parentheses.removeLast();
+    			} else {
+    				return false;
+    			}
+    		}    		
+    	}
+    	return parentheses.isEmpty();
+    }
     
 }
